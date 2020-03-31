@@ -1,6 +1,3 @@
-"""
-Computer Vision Packages
-"""
 import torch
 from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
