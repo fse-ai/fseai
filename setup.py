@@ -1,6 +1,3 @@
-"""
-Code With fseai
-"""
 import setuptools
 
 with open("README.md", "r") as fh:
