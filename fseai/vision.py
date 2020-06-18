@@ -122,6 +122,5 @@ def visualise_test(samples, dataset, model):
         outputs = model(image)
         _, predicted = torch.max(outputs.data, 1)
         a[i].imshow(data, cmap='gray')
-        a[i].set_title('Target = %s, Prediction = %s' % (target.item())
-                       % (predicted.item()))
+        a[i].set_title('Target = %s, Prediction = %s' % (target.item(), predicted.item()))
         fig.tight_layout()
