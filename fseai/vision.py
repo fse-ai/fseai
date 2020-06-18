@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from fseai import fseai_models as models
 
 
-def input_mnist():
+def input_dataset():
     """
     Function to load mnist dataset
     """
@@ -20,20 +20,38 @@ def input_mnist():
     return trainset, testset
 
 
-def build_mnist_model():
+def get_features(trainset):
+    """
+    Finds the image size from data set
+    """
+    image_size = trainset.data[1].shape
+    if len(image_size) == 2:
+        input_size = image_size[0] * image_size[1]
+    if len(image_size) == 3:
+        input_size = image_size[0] * image_size[1] * image_size[2]
+
+    output_size = max(trainset.targets) + 1
+
+    if type(trainset.targets) is torch.Tensor:
+        output_size = (max(trainset.targets).item() + 1)
+
+    return input_size, output_size
+
+
+def build_model(input_size, output_size):
     """
     Function to build a fully connected model
     """
     # Import the Fully Connected network model from fseai_models
     model = models.FCModel
-    input_size = 784
+    # input_size = 784
     hidden_size = [128, 64]
-    output_size = 10
+    # output_size = 10
     model = model(input_size, hidden_size, output_size)
     return model
 
 
-def train_mnist(model, trainset):
+def train_model(model, trainset, input_size):
     """
     Function to train mnist data with Fully Connected model
     """
@@ -48,7 +66,7 @@ def train_mnist(model, trainset):
     for epoch in range(num_epochs):
         for i, (images, labels) in enumerate(train_loader):
             # Flatten the input images of [28,28] to [1,784]
-            images = images.reshape(-1, 784)
+            images = images.reshape(-1, input_size)
 
             # Forward Pass
             outputs = model(images)
@@ -64,14 +82,14 @@ def train_mnist(model, trainset):
             total = labels.size(0)
             _, predicted = torch.max(outputs.data, 1)
             correct = (predicted == labels).sum().item()
-            accuracy_mnist.append(correct/total)
+            accuracy_mnist.append(correct / total)
 
-        print('Epoch %s, Training Accuracy: %s' % (epoch, (correct/total) * 100))
+        print('Epoch %s, Training Accuracy: %s' % (epoch, (correct / total) * 100))
     print('Model training with MNIST train data set completed!')
     return model
 
 
-def test_mnist(model, testset):
+def test_model(model, testset, input_size):
     """
     Test the cnn model for mnist test dataset
     """
@@ -81,14 +99,14 @@ def test_mnist(model, testset):
         correctly_classified = 0
         total_classified = 0
         for images, labels in test_loader:
-            images = images.reshape(-1, 784)
+            images = images.reshape(-1, input_size)
             outputs = model(images)
             _, predicted = torch.max(outputs.data, 1)
             total_classified += labels.size(0)
             correctly_classified += (predicted == labels).sum().item()
 
     print('Test Accuracy of the model on the test dataset: %s'
-          % ((correctly_classified/total_classified) * 100))
+          % ((correctly_classified / total_classified) * 100))
 
 
 def visualise_sampledata(samples, dataset):
@@ -102,12 +120,16 @@ def visualise_sampledata(samples, dataset):
         n = samples[i]
         data = dataset.data[n]
         target = dataset.targets[n]
+        if type(target) is torch.Tensor:
+            target = target
+        else:
+            target = torch.Tensor([target])
         a[i].imshow(data, cmap='gray')
         a[i].set_title('Target = %s' % (target.item()))
         fig.tight_layout()
 
 
-def visualise_test(samples, dataset, model):
+def visualise_test(samples, dataset, model, input_size):
     """
     Visualise six random samples of test dataset and corresponding predictions
     """
@@ -117,8 +139,16 @@ def visualise_test(samples, dataset, model):
     for i in range(0, 6):
         n = samples[i]
         data = dataset.data[n]
-        image = data.reshape(-1, 784).float()
-        target = dataset.targets[n]
+        if type(testset.data.reshape(-1, input_size)) is torch.Tensor:
+            image = data.reshape(-1, input_size).float()
+            target = dataset.targets[n]
+        else:
+            # if type(testset.data.reshape(-1, input_size)) == 'numpy.ndarray':
+            image_numpy = data.reshape(-1, input_size)
+            image = torch.from_numpy(image_numpy).float()
+            target_numpy = dataset.targets[n]
+            target = torch.tensor([target_numpy])
+
         outputs = model(image)
         _, predicted = torch.max(outputs.data, 1)
         a[i].imshow(data, cmap='gray')
