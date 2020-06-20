@@ -27,14 +27,14 @@ def get_features(trainset):
     image_size = trainset.data[1].shape
     if len(image_size) == 2:
         input_size = image_size[0] * image_size[1]
+
     if len(image_size) == 3:
         input_size = image_size[0] * image_size[1] * image_size[2]
 
-    output_size = max(trainset.targets) + 1
-
-    if type(trainset.targets) is torch.Tensor:
+    if isinstance(trainset.targets, torch.Tensor):
         output_size = (max(trainset.targets).item() + 1)
-
+    else:
+        output_size = max(trainset.targets) + 1
     return input_size, output_size
 
 
@@ -44,9 +44,7 @@ def build_model(input_size, output_size):
     """
     # Import the Fully Connected network model from fseai_models
     model = models.FCModel
-    # input_size = 784
     hidden_size = [128, 64]
-    # output_size = 10
     model = model(input_size, hidden_size, output_size)
     return model
 
@@ -139,7 +137,7 @@ def visualise_test(samples, dataset, model, input_size):
     for i in range(0, 6):
         n = samples[i]
         data = dataset.data[n]
-        if type(testset.data.reshape(-1, input_size)) is torch.Tensor:
+        if instance(testset.data.reshape(-1, input_size), torch.Tensor):
             image = data.reshape(-1, input_size).float()
             target = dataset.targets[n]
         else:
