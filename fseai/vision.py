@@ -119,7 +119,7 @@ def visualise_sampledata(samples, dataset):
         n = samples[i]
         data = dataset.data[n]
         target = dataset.targets[n]
-        if isinstance(target, torch.Tensor:
+        if isinstance(target, torch.Tensor):
             target = target
         else:
             target = torch.Tensor([target])
