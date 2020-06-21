@@ -31,7 +31,7 @@ def get_features(trainset):
     if len(image_size) == 3:
         input_size = image_size[0] * image_size[1] * image_size[2]
 
-    is instance(trainset.targets, torch.Tensor):
+    if instance(trainset.targets, torch.Tensor):
         output_size = (max(trainset.targets).item() + 1)
     else:
         output_size = max(trainset.targets) + 1
