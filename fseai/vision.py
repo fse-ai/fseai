@@ -119,7 +119,7 @@ def visualise_sampledata(samples, dataset):
         n = samples[i]
         data = dataset.data[n]
         target = dataset.targets[n]
-        if type(target) is torch.Tensor:
+        if isinstance(target, torch.Tensor:
             target = target
         else:
             target = torch.Tensor([target])
@@ -138,7 +138,7 @@ def visualise_test(samples, dataset, model, input_size):
     for i in range(0, 6):
         n = samples[i]
         data = dataset.data[n]
-        if instance(testset.data.reshape(-1, input_size), torch.Tensor):
+        if isinstance(testset.data.reshape(-1, input_size), torch.Tensor):
             image = data.reshape(-1, input_size).float()
             target = dataset.targets[n]
         else:
