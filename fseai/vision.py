@@ -138,7 +138,7 @@ def visualise_test(samples, dataset, model, input_size):
     for i in range(0, 6):
         n = samples[i]
         data = dataset.data[n]
-        if isinstance(testset.data.reshape(-1, input_size), torch.Tensor):
+        if isinstance(data.reshape(-1, input_size), torch.Tensor):
             image = data.reshape(-1, input_size).float()
             target = dataset.targets[n]
         else:
