@@ -31,10 +31,11 @@ def get_features(trainset):
     if len(image_size) == 3:
         input_size = image_size[0] * image_size[1] * image_size[2]
 
-    if instance(trainset.targets, torch.Tensor):
+    if isinstance(trainset.targets, torch.Tensor):
         output_size = (max(trainset.targets).item() + 1)
     else:
         output_size = max(trainset.targets) + 1
+        
     return input_size, output_size
 
 
@@ -145,7 +146,7 @@ def visualise_test(samples, dataset, model, input_size):
             image_numpy = data.reshape(-1, input_size)
             image = torch.from_numpy(image_numpy).float()
             target_numpy = dataset.targets[n]
-            target = torch.tensor([target_numpy])
+            target = torch.Tensor([target_numpy])
 
         outputs = model(image)
         _, predicted = torch.max(outputs.data, 1)
