@@ -7,16 +7,20 @@ import matplotlib.pyplot as plt
 from fseai import fseai_models as models
 
 
-def input_dataset():
+def input_dataset(name):
     """
-    Function to load mnist dataset
+    Function to load specified dataset from torchvision.datasets
     """
-    trainset = datasets.MNIST('', download=True, train=True,
-                              transform=transforms.ToTensor())
-    testset = datasets.MNIST('', download=True, train=False,
-                             transform=transforms.ToTensor())
+    concatname = 'datasets' + '.' + name
+    function_map = {'datasets.MNIST': datasets.MNIST, 'datasets.FashionMNIST': datasets.FashionMNIST,
+          'datasets.CIFAR10': datasets.CIFAR10, 'datasets.KMNIST': datasets.KMNIST,
+          'datasets.EMNIST': datasets.EMNIST, 'datasets.ImageNet': datasets.ImageNet,
+          'datasets.QMNIST': datasets.QMNIST, 'datasets.Cityscapes': datasets.Cityscapes}
+    selection = function_map[concatname]
+    trainset = selection('', download=True, train=True, transform=transforms.ToTensor())
+    testset = selection('', download=True, train=False, transform=transforms.ToTensor())
 
-    print('MNIST train and test data set Loaded!')
+    print('Selected train and test data set Loaded!')
     return trainset, testset
 
 
