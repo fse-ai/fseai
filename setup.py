@@ -12,7 +12,10 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
-    classifiers=[       
+    install_requires=[
+        'torch>=1.6.0',
+        'matplotlib'],
+    classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Education",
         "License :: OSI Approved :: Apache License, Version 2.0 (Apache-2.0)",
