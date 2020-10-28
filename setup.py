@@ -14,7 +14,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'torch>=1.6.0',
-        'matplotlib'],
+        'matplotlib',
+        'torchvision>=0.7.0'],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Education",
